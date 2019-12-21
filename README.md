@@ -10,7 +10,40 @@ _Note: I am not affiliated with nor endorsed by [turbinehq.com](https://turbineh
 
 `composer require stephanecoinon/turbine`
 
-## Usage
+### Integration with Laravel
+
+Although this package is vanilla PHP, it offers a Laravel service provider which
+binds an authenticated `Turbine` instance in the container.
+
+Laravel version >= 5.5 will discover the package and register the service provider
+automatically.
+
+Add these parameters to your `.env`:
+
+```ini
+TURBINE_EMAIL=your_email
+TURBINE_PASSWORD=your_password
+# Replace "yourcompany" below with your turbinehq subdomain:
+TURBINE_URL=https://yourcompany.turbinehq.com/api/v1/
+```
+
+Add this `turbine` configuration key to your `config/services.php`:
+
+```php
+return [
+    // ...
+
+    'turbine' => [
+        'email' => env('TURBINE_EMAIL'),
+        'password' => env('TURBINE_PASSWORD'),
+        'url' => env('TURBINE_URL'),
+    ],
+
+    // ...
+];
+```
+
+## Usage in plain PHP
 
 ```php
 <?php
@@ -33,6 +66,26 @@ try {
 
 $employees = $turbine->employees(); // returns a Collection of Employee instances
 
+```
+
+## Usage in Laravel
+
+You can resolve an authenticated instance of `\StephaneCoinon\Turbine\Turbine` out of
+the container. And because the instance is already authenticated in the turbine API,
+all you have to do is call one of the methods to fetch data from an API endpoint:
+
+```php
+use \StephaneCoinon\Turbine\Turbine;
+
+$employees = app(Turbine::class)->employees();
+```
+
+or use the facade:
+
+```php
+use \StephaneCoinon\Turbine\Laravel\Facades\Turbine;
+
+$employees = Turbine::employees();
 ```
 
 ## Tests

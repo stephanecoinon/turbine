@@ -18,12 +18,12 @@ class Client
     /**
      * Instantiate a new Client.
      *
-     * @param string|null  $host
+     * @param string|null  $url  turbine API url for your subscription
      */
-    public function __construct($host = null)
+    public function __construct($url = null)
     {
         $this->setClient(new GuzzleClient([
-            'base_uri' => $host ?: getenv('TURBINE_HOST'),
+            'base_uri' => $url ?: getenv('TURBINE_URL'),
             'headers' => [
                 'Accept' => 'application/json',
                 'Content-Type' => 'application/json',

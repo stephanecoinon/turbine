@@ -2,17 +2,17 @@
 
 namespace StephaneCoinon\Turbine\Tests;
 
-use Dotenv\Dotenv;
 use Mockery;
 
 class TestCase extends \PHPUnit\Framework\TestCase
 {
+    use Traits\LoadsDotEnv;
+
     public function setUp(): void
     {
-        parent::setUp();
+        $this->loadDotEnv();
 
-        $dotenv = Dotenv::createImmutable(__DIR__.'/..');
-        $dotenv->load();
+        parent::setUp();
     }
 
     public function tearDown(): void
