@@ -66,4 +66,16 @@ class Turbine
 
         return collect($response->json('collection'))->mapInto(Employee::class);
     }
+
+    /**
+     * Get the time-off entries for the logged in user.
+     *
+     * @return \Illuminate\Support\Collection of \StephaneCoinon\Turbine\TimeOff
+     */
+    public function timeOff()
+    {
+        $response = $this->client->get('timeoff');
+
+        return collect($response->json('collection'))->mapInto(TimeOff::class);
+    }
 }

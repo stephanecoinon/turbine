@@ -5,8 +5,8 @@ namespace StephaneCoinon\Turbine\Tests;
 use GuzzleHttp\Psr7\Response;
 use Illuminate\Support\Collection;
 use StephaneCoinon\Turbine\Employee;
-use StephaneCoinon\Turbine\EmployeeState;
 use StephaneCoinon\Turbine\Http\Client;
+use StephaneCoinon\Turbine\State;
 use StephaneCoinon\Turbine\Team;
 use StephaneCoinon\Turbine\Turbine;
 
@@ -92,7 +92,7 @@ class FetchEmployeesTest extends TestCase
 
         $state = $turbine->employees()->first()->state;
 
-        $this->assertInstanceOf(EmployeeState::class, $state);
+        $this->assertInstanceOf(State::class, $state);
         $this->assertEquals([
             'name' => 'active',
             'color' => 'active',

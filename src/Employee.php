@@ -8,7 +8,7 @@ class Employee extends ApiModel
     {
         parent::__construct($attributes);
 
-        $this->teams = collect($this->teams)->mapInto(Team::class);
-        $this->state = new EmployeeState($this->state);
+        $this->teams and $this->teams = collect($this->teams)->mapInto(Team::class);
+        $this->state and $this->state = new State($this->state);
     }
 }

@@ -2,6 +2,6 @@
 
 namespace StephaneCoinon\Turbine;
 
-class EmployeeState extends ApiModel
+class State extends ApiModel
 {
 }
