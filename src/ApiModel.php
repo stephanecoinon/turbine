@@ -2,6 +2,8 @@
 
 namespace StephaneCoinon\Turbine;
 
+use Carbon\Carbon;
+
 class ApiModel
 {
     /**
@@ -14,13 +16,27 @@ class ApiModel
     protected $attributes = [];
 
     /**
+     * Attributes to cast to a native type.
+     *
+     * @var array
+     */
+    protected $casts = [];
+
+    /**
+     * Format to use when casting dates.
+     *
+     * @var string
+     */
+    protected $dateFormat;
+
+    /**
      * Instantiate a new Model with its attributes.
      *
      * @param  array  $attributes
      */
     public function __construct($attributes = [])
     {
-        $this->attributes = $attributes;
+        $this->fill($attributes);
     }
 
     /**
@@ -53,9 +69,50 @@ class ApiModel
      */
     public function setAttribute($name, $value)
     {
-        $this->attributes[$name] = $value;
+        $this->attributes[$name] = $this->castAttribute($name, $value);
 
         return $this;
+    }
+
+    /**
+     * Set an array of attributes on the model.
+     *
+     * @param  array  $attributes
+     * @return $this
+     */
+    public function fill($attributes = [])
+    {
+        foreach ($attributes as $name => $value) {
+            $this->setAttribute($name, $value);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Cast an attribute if its name is in static::$casts.
+     *
+     * Returns the unchanged value if $name is not in static::$casts.
+     *
+     * @param  string  $name
+     * @param  mixed  $value
+     * @return mixed
+     */
+    public function castAttribute($name, $value)
+    {
+        // Return the unchanged value if the attribute should not be cast
+        if (!array_key_exists($name, $this->casts)) {
+            return $value;
+        }
+
+        switch ($this->casts[$name]) {
+            case 'date':
+            case 'datetime':
+                return Carbon::createFromFormat($this->getDateFormat(), $value);
+        }
+
+        // Return the unchanged value if cast type is not supported
+        return $value;
     }
 
     /**
@@ -93,6 +150,29 @@ class ApiModel
     public function __set($name, $value)
     {
         $this->setAttribute($name, $value);
+    }
+
+    /**
+     * Get the date format used for casting dates.
+     *
+     * @return string
+     */
+    public function getDateFormat()
+    {
+        return $this->dateFormat ?: 'Y-m-d H:i:s';
+    }
+
+    /**
+     * Set the date format to use for casting dates.
+     *
+     * @param  string  $format
+     * @return $this
+     */
+    public function setDateFormat($format)
+    {
+        $this->dateFormat = $format;
+
+        return $this;
     }
 
     /**

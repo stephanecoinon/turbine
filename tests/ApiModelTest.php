@@ -2,6 +2,8 @@
 
 namespace StephaneCoinon\Turbine\Tests;
 
+use Carbon\Carbon;
+use DateTimeInterface;
 use StephaneCoinon\Turbine\ApiModel;
 use StephaneCoinon\Turbine\Tests\TestCase;
 
@@ -50,4 +52,35 @@ class ApiModelTest extends TestCase
         $this->assertFalse($model->hasAttribute('age'));
         $this->assertFalse(isset($model->age));
     }
+
+    /** @test */
+    function casting_an_attribute_to_datetime_using_default_date_format()
+    {
+        $model = new ApiModelWithDates([
+            'created_at' => '2019-12-21 17:07:27'
+        ]);
+
+        $this->assertInstanceOf(Carbon::class, $d = $model->created_at);
+        $this->assertEquals([2019, 12, 21], [$d->year, $d->month, $d->day]);
+        $this->assertEquals([17, 7, 27], [$d->hour, $d->minute, $d->second]);
+    }
+    /** @test */
+    function casting_an_attribute_to_datetime_using_custom_date_format()
+    {
+        $model = (new ApiModelWithDates)
+            ->setDateFormat(DateTimeInterface::RFC3339_EXTENDED)
+            ->fill(['created_at' => '2019-12-21T17:07:27.000+01:00']);
+
+        $this->assertInstanceOf(Carbon::class, $d = $model->created_at);
+        $this->assertEquals([2019, 12, 21], [$d->year, $d->month, $d->day]);
+        $this->assertEquals([17, 7, 27], [$d->hour, $d->minute, $d->second]);
+    }
+}
+
+
+class ApiModelWithDates extends ApiModel
+{
+    protected $casts = [
+        'created_at' => 'datetime'
+    ];
 }
