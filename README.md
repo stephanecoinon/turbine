@@ -31,6 +31,8 @@ try {
 
 // Login succeeded...
 
+$employees = $turbine->employees(); // returns a Collection of Employee instances
+
 ```
 
 ## Tests

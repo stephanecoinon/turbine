@@ -21,9 +21,9 @@ class Response
     public $content;
 
     /**
-     * Response as JSON object.
+     * JSON response as array.
      *
-     * @var Object
+     * @var array
      */
     public $json;
 
@@ -32,7 +32,7 @@ class Response
         $this->statusCode = $response->getStatusCode();
         $this->content = $response->getBody()->getContents();
         // @TODO validate JSON
-        $this->json = json_decode($this->content);
+        $this->json = json_decode($this->content, true);
     }
 
     /**
@@ -47,7 +47,7 @@ class Response
             return $this->json;
         }
 
-        return $this->json->$attribute ?? null;
+        return $this->json[$attribute] ?? null;
     }
 
     public function succeeded()

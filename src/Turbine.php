@@ -54,4 +54,16 @@ class Turbine
 
         return $this;
     }
+
+    /**
+     * Get the list of employees.
+     *
+     * @return \Illuminate\Support\Collection of \StephaneCoinon\Turbine\Employee
+     */
+    public function employees()
+    {
+        $response = $this->client->get('employees');
+
+        return collect($response->json('collection'))->mapInto(Employee::class);
+    }
 }
